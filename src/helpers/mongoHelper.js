@@ -97,6 +97,13 @@ module.exports = {
         client.close();
     },
 
+    deleteOne: async (filter, options, collectionName) => {
+        const client = await module.exports.connect();
+        const collection = await module.exports.getCollection(client, collectionName)
+        await collection.deleteOne(filter, options);
+        client.close();
+    },
+
     aggregate: async(pipeline, collectionName) => {
         const client = await module.exports.connect();
         const collection = await module.exports.getCollection(client, collectionName)
