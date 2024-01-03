@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const PORT = 7080;
+const PORT = 3080;
 const v1Router = require('./routers/api.v1')
 
 // defining the Express app
