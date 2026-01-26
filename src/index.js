@@ -1,30 +1,34 @@
-// importing the dependencies
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const PORT = 3080;
-const v1Router = require('./routers/api.v1')
+import "dotenv/config";
+import express from "express";
+import pinoHttp from "pino-http";
+import apiRouter from "./routers/api.v1.js";
+import logger from "./utils/logger.js";
 
-// defining the Express app
+const PORT = process.env.PORT || 3080;
+
 const app = express();
 
-// adding Helmet to enhance your API's security
-app.use(helmet());
+const httpLogger = pinoHttp({
+  logger,
+  customSuccessMessage: (req, res) =>
+    `${res.statusCode} ${req.method} ${req.url}`,
+  customErrorMessage: (req, res, err) =>
+    `${res.statusCode} ${req.method} ${req.url} ${err?.message ?? ""}`,
+  customAttributeKeys: {
+    req: "ignore",
+    res: "ignore",
+    err: "ignore",
+    responseTime: "ignore",
+  },
+  serializers: { ignore: () => undefined },
+  wrapSerializers: false,
+});
 
-// using bodyParser to parse JSON bodies into JS objects
-app.use(bodyParser.json());
+app.use(httpLogger);
+app.use(express.json());
 
-// enabling CORS for all requests
-app.use(cors());
+app.use("/api/v1", apiRouter);
 
-// adding morgan to log HTTP requests
-app.use(morgan('combined'));
-
-app.use('/api/v1', v1Router);
-
-// starting the server
 app.listen(PORT, () => {
-  console.log(`listening on port ${PORT}`);
+  logger.info(`listening on port ${PORT}`);
 });
