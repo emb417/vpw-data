@@ -35,4 +35,4 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/vpw-data:refactor
             ${{ secrets.DOCKER_USERNAME }}/vpw-data:${{ github.sha }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
