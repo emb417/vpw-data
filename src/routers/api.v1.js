@@ -9,6 +9,7 @@ router.get("/", function (req, res) {
 
 router.get("/projects", async (req, res) => {
   const db = await getDb();
+  const channelName = req.query.projectName;
   const pipeline = [
     { $sort: { _id: -1 } },
     {
@@ -20,12 +21,23 @@ router.get("/projects", async (req, res) => {
     {
       $replaceRoot: { newRoot: "$latestAction" },
     },
-    {
-      $sort: { channelName: 1 },
-    },
   ];
 
-  const projects = await db.collection("projects").aggregate(pipeline).toArray();
+  if (channelName) {
+    pipeline.unshift({
+      $match: {
+        channelName: {
+          $regex: channelName,
+          $options: "i",
+        },
+      },
+    });
+  }
+
+  const projects = await db
+    .collection("projects")
+    .aggregate(pipeline)
+    .toArray();
   res.send(projects);
 });
 

@@ -80,6 +80,7 @@ All API endpoints are prefixed with `/api/v1`.
 
 - **`GET /api/v1/projects`**
   - **Description**: Retrieves the latest project actions for all projects, grouped by `channelName`.
+  - **Parameters**: projectName (query parameter) regex matches against `channelName`
   - **Response**: An array of the latest project documents for each unique project.
 
 - **`POST /api/v1/projects`**
