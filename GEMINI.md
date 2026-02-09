@@ -78,6 +78,10 @@ All API endpoints are prefixed with `/api/v1`.
   - **Description**: Checks if the service is running.
   - **Response**: "VPW Data Service is up and running..."
 
+- **`GET /api/v1/projects`**
+  - **Description**: Retrieves the latest project actions for all projects, grouped by `channelName`.
+  - **Response**: An array of the latest project documents for each unique project.
+
 - **`POST /api/v1/projects`**
   - **Description**: Inserts a new project action (check-in/check-out).
   - **Request Body**: JSON object containing project details, including `actionType` (`"checkin"` or `"checkout"`), `userId`, `link`, `version`, and `comments` (for check-in).

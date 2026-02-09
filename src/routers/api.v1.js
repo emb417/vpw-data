@@ -7,6 +7,28 @@ router.get("/", function (req, res) {
   res.send("VPW Data Service is up and running...");
 });
 
+router.get("/projects", async (req, res) => {
+  const db = await getDb();
+  const pipeline = [
+    { $sort: { _id: -1 } },
+    {
+      $group: {
+        _id: "$channelName",
+        latestAction: { $first: "$$ROOT" },
+      },
+    },
+    {
+      $replaceRoot: { newRoot: "$latestAction" },
+    },
+    {
+      $sort: { channelName: 1 },
+    },
+  ];
+
+  const projects = await db.collection("projects").aggregate(pipeline).toArray();
+  res.send(projects);
+});
+
 router.post("/projects", async (req, res) => {
   const db = await getDb();
   await db.collection("projects").insertOne(req.body);
